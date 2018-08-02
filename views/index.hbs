@@ -1,0 +1,26 @@
+
+<div class="container">
+    <div class="row">
+          <div class="progress">
+            <div class="determinate "id="progressBar" value="0" max="100" style="width: 0%"></div>
+           <span class="sr-only"></span>
+   </div>
+        <form id="upload_form" enctype="multipart/form-data" method="post">
+        <div class="file-field input-field" >
+            <div class="btn">
+                <span>File</span>
+                <input type="file"  name="image" id="image">
+            </div>
+         <div class="file-path-wrapper">
+                <input class="file-path validate" type="text" placeholder="Upload image" >
+            </div>
+         </div>
+            <input class="btn" type="button" value="Upload File" onclick="uploadFile()" style="width:100%">
+            <h3 id="status"></h3>
+            <p id="loaded_n_total"></p>
+        </form>
+    </div>
+</div>
+
+
+   <script type="text/javascript" src="/javascripts/app.js">
