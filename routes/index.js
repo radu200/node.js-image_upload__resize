@@ -24,9 +24,9 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({
   storage: storage,
-  // limits: {
-  //   fileSize: 1024 * 1024 * 5
-  // },
+  limits: {
+    fileSize: 5e+6
+  },
   fileFilter: fileFilter
 });
 
@@ -42,19 +42,33 @@ router.get('/', function (req, res, next) {
   });
 });
 
+/* GET home page. */
+router.get('/success', function (req, res, next) {
+ 
+  res.render('success', {
 
+  });
+});
 
 router.post('/posts', upload.single('image'), function (req, res, next) {
-  console.log(req.file)
+
+  if(req.file){
+    var filename = req.file.filename;
+    var filepath = req.file.path
+   
+    sharp(filepath)
+    .resize(668,154)
+    .toFile( './resized/' + req.file.filename, (err, info) => {
+      console.log(info)
+    });
+
+  }else{
+     filename = 'no-user.png' 
+  }
   
-  sharp(req.file.path)
-  .resize(668,154)
-  .toFile( './resized/' + req.file.filename, (err, info) => {
-    console.log(info)
-  });
   const posts = {
-    image: req.file.filename,
-    // name:req.body.name
+    image: filename,
+    name:req.body.name
   }
   db.query('insert into posts  set ?', posts, function (err, ) {
 
@@ -67,15 +81,14 @@ router.post('/posts', upload.single('image'), function (req, res, next) {
       res.status(200).json({
         message: "Posts Added",
         posts: {
-          image: req.file.path,
-          name: req.body.name
-
+          image: filename,
+          name: req.body.name,
+          size:5e+6
         }
       })
 
     }
   })
-
 })
 
 module.exports = router;

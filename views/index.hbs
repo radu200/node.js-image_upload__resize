@@ -9,13 +9,19 @@
         <div class="file-field input-field" >
             <div class="btn">
                 <span>File</span>
-                <input type="file"  name="image" id="image">
+                <input type="file"  name="image" id="image" accept=".jpg,.jpeg,.png,.gif">
             </div>
          <div class="file-path-wrapper">
-                <input class="file-path validate" type="text" placeholder="Upload image" >
+                <input class="file-path validate" type="text" placeholder="Upload image" accept=".jpg,.jpeg,.png,.gif" >
             </div>
          </div>
-            <input class="btn" type="button" value="Upload File" onclick="uploadFile()" style="width:100%">
+         <div id="image_error" class="error"></div>
+
+        <div class="input-field col s12">
+            <input placeholder="Name" id="name" type="text" class="validate" name="name">
+        <p id="name_error" class="error"></div>
+        </div>
+            <input class="btn" type="submit" value="Upload File"  style="width:100%">
             <h3 id="status"></h3>
             <p id="loaded_n_total"></p>
         </form>
