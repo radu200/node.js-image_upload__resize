@@ -3,7 +3,7 @@ var router = express.Router();
 const db = require('../config/database.js')
 const multer = require('multer');
 const sharp = require('sharp')
-
+const fs = require('fs')
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './uploads/');
@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 
 const fileFilter = (req, file, cb) => {
   // reject a file
-  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg') {
     cb(null, true);
   } else {
     cb(null, false);
@@ -48,6 +48,7 @@ router.get('/success', function (req, res, next) {
   res.render('success', {
 
   });
+
 });
 
 router.post('/posts', upload.single('image'), function (req, res, next) {
@@ -61,23 +62,30 @@ router.post('/posts', upload.single('image'), function (req, res, next) {
     .toFile( './resized/' + req.file.filename, (err, info) => {
       console.log(info)
     });
-
+    
   }else{
-     filename = 'no-user.png' 
+    filename = 'no-user.png' 
   }
   
+  
+ 
   const posts = {
     image: filename,
     name:req.body.name
   }
   db.query('insert into posts  set ?', posts, function (err, ) {
-
+     fs.unlink('./uploads/' +req.file.filename, function(err){
+    if (err) {
+      console.log("failed to delete file:" + err);
+  } else {
+      console.log('successfully deleted ');
+  }
+  })
     if (err) {
       res.status(500).json({
         error: err
       });
     } else {
-      // //console.log('res', results)
       res.status(200).json({
         message: "Posts Added",
         posts: {
@@ -86,9 +94,12 @@ router.post('/posts', upload.single('image'), function (req, res, next) {
           size:5e+6
         }
       })
-
+    
+      
     }
   })
+
+ 
 })
 
 module.exports = router;
